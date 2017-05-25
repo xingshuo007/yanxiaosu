@@ -1,0 +1,76 @@
+<div class="manage">
+    <h4>用户管理</h4>
+    <hr>
+    <div class="search">
+        <span>角色</span>
+        <select ng-model="roles" id="roles">
+            <option value="">全部</option>
+            <option value="管理员1">管理员1</option>
+            <option value="管理员2">管理员2</option>
+            <option value="管理员3">管理员3</option>
+        </select>
+        <span>状态</span>
+        <select ng-model="states" id="states">
+            <option value="">全部</option>
+            <option value="启用">启用</option>
+            <option value="禁用">禁用</option>
+        </select>
+        <span>登录名</span>
+        <input type="text" ng-model="names" id="names">
+        <button id="sear" ng-click="searchFn()">查询</button>
+    </div>
+    <h4>列表</h4>
+    <hr>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>登录名</th>
+                <th>真实姓名</th>
+                <th>角色</th>
+                <th>手机</th>
+                <th>邮箱</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in cutoutData">
+                <td>{{x.ID}}</td>
+                <td>{{x.loginname}}</td>
+                <td>{{x.name}}</td>
+                <td>{{x.role}}</td>
+                <td>{{x.telephone}}</td>
+                <td>{{x.email}}</td>
+                <td>{{x.state}}</td>
+                <td>{{x.creattime}}</td>
+                <td><a href=""  ng-click="change(x.ID)">修改</a> <a href="" ng-click="remove(x.ID)">删除</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span  class="prev" ng-click="updownFn('-')">上一页</span>
+        <span class="pages" ng-class="{back:(index+1)==1}" ng-click="changeIndexFn(1)" ng-show="showState">1</span>
+        <span class="pages" ng-show="showStatue1">...</span>
+        <span ng-repeat="i in pageArr" ng-show="showArr.indexOf(i)!=-1" class="pages" ng-class="{back:(index+1)==i}" ng-click="changeIndexFn(i)">{{i}}</span>
+        <span  class="pages" ng-show="showStatue2">...</span>
+        <span class="pages" ng-class="{back:(index+1)==allPage}" ng-click="changeIndexFn(allPage)">{{allPage}}</span>
+        <span  class="next" ng-click="updownFn('+')">下一页</span>
+        第<input type="number" min="1" max="{{allPage}}" ng-change="changeInput()" ng-model="valueDATA" style="width:50px;" id="txt">页
+        <b>共{{allPage}}条数据</b>
+    </div>
+    <div id="mark" ng-hide="bool">
+        <ul>
+            <li>登录名：<input type="text" value="{{temp.loginname}}" ng-model="temp.loginname"></li>
+            <li>真实姓名：<input type="text" value="{{temp.name}}" ng-model="temp.name"></li>
+            <li>角色：<input type="text" value="{{temp.role}}" ng-model="temp.role"></li>
+            <li>手机：<input type="text" value="{{temp.telephone}}" ng-model="temp.telephone"></li>
+            <li>邮箱：<input type="text" value="{{temp.email}}" ng-model="temp.email"></li>
+            <li>状态：<input type="text" value="{{temp.state}}" ng-model="temp.state"></li>
+            <li>备注：<textarea name="" id="" cols="30" rows="3"></textarea></li>
+            <li><a href="" ng-click="sure()">确定</a> <a href="" ng-click="cancel()">取消</a></li>
+        </ul>
+    </div>
+</div>
+</div>

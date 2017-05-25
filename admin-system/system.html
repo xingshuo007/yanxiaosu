@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="common/bootstrap.css">
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+<div ng-controller="myCtrl">
+    <nav class="navbar topnav nav" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">通用权限系统</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    <li><a href="#">个人中心</a></li>
+                    <li><a href="#">系统设置</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class=" content">
+        <div class="col-md-2">
+            <nav class="navbar">
+                <ul class="nav sidebar-nav">
+                    <li>
+                        <a href="#">我的工作台</a>
+                    </li>
+                    <li>
+                        <a href="#">权限管理</a>
+                    </li>
+                    <li>
+                        <a href="#">功能配置</a>
+                    </li>
+                    <li ui-sref="addUser">
+                        <a href="#">角色管理</a>
+                    </li>
+                    <li ui-sref="manage">
+                        <a href="#">用户管理</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-10">
+            <div ui-view></div>
+        </div>
+    </div>
+
+</div>
+<!-- 引入angularjs框架和ui-router框架，引入app.js框架 -->
+<script src="common/angular.js"></script>
+<script src="common/angular-ui-router.js"></script>
+<script src="common/jquery.js"></script>
+<script src="scripts/app.js"></script>
+<script src="scripts/config.js"></script>
+</body>
+</html>
