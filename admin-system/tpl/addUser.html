@@ -9,7 +9,7 @@
         <li>手机：<input type="text" ng-model="add.telephone"></li>
         <li>邮箱：<input type="text" ng-model="add.email"></li>
         <li>状态：<input type="text" ng-model="add.state"></li>
-        <li>创建时间: <input type="text" ng-model="add.creattime"></li>
+        <li>创建时间: <input type="text" ng-model="add.creattime |date:'yyyy-MM-dd hh:mm'"></li>
     </ul>
     <button ng-click="addFn()">add</button>
 </div>

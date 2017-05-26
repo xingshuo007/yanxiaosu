@@ -8,9 +8,71 @@ function config($stateProvider, $urlRouterProvider) {
         .state('manage', {
             url: '/manage',
             templateUrl: 'tpl/manage.html',
-            controller:function($scope){
-
-
+            //    controller:function($scope,cutpage,$filter){
+            //        cutpage($scope)
+            //    //点击查询筛选
+            //    $scope.searchFn=function(){
+            //        $scope.loginname=$scope.names
+            //        $scope.role=$scope.roles
+            //        $scope.state=$scope.states
+            //        var result=$filter('filter')($scope.data,{role:$scope.role,state:$scope.state,loginname:$scope.loginname})
+            //        $scope.fileData=function(){
+            //            return result.map(function(i){
+            //                return i
+            //            })
+            //        }
+            //        cutpage($scope)
+            //    }
+            //
+            //
+            //
+            //
+            //}
+            controller:function($scope,cutpage,$filter){
+                cutpage($scope)
+                //点击查询进行筛选
+                $scope.searchFn=function(){
+                    $scope.loginname=$scope.names
+                    $scope.role=$scope.roles
+                    $scope.state=$scope.states
+                    var result=$filter('filter')($scope.data,{role:$scope.role,state:$scope.state,loginname:$scope.loginname})
+                    $scope.fileData=function(){
+                        return result.map(function(i){
+                            return i
+                        })
+                    }
+                    cutpage($scope)
+                }
+                //根据唯一的id值匹配删除;
+                $scope.remove = function (id) {
+                    $scope.data.forEach(function(item,index){//遍历数据，若点击删除的数据行对应的Id与数据中的id值相匹配，则利用索引删除数组对应值
+                        if(item.ID==id){
+                            $scope.data.splice(index,1)
+                        }
+                    })
+                    cutpage($scope)
+                }
+                $scope.bool=true//先将点击修改的弹出框隐藏
+                //修改表格信息
+                $scope.change=function(id){
+                    $scope.bool=false //点击修改让弹出框显示
+                    $scope.data.forEach(function(item,index){
+                        if(item.ID==id){//遍历数据若源数据的ID等于点击的数据的ID
+                            $scope.temp={}
+                            for(s in item){//将源数据的内容赋值给这个定义的空对象
+                                $scope.temp[s]=item[s];
+                            }
+                            $scope.sure=function(){//点击确定将弹出框隐藏并将对应源数据修改为定义的新对象
+                                $scope.bool=true
+                                $scope.data[index]=$scope.temp;
+                                cutpage($scope)
+                            }
+                        }
+                    })
+                    $scope.cancel=function(){//点击取消弹出框消失
+                        $scope.bool=true
+                    }
+                }
 
             }
         })
@@ -21,16 +83,7 @@ function config($stateProvider, $urlRouterProvider) {
                 $scope.addFn = function () {//添加用户信息
                     var num = $scope.data.length
                     $scope.add.ID = ++num
-                    function fn(day) {
-                        if (day < 10) {
-                            return '0' + day
-                        } else {
-                            return day
-                        }
-                    }
-
-                    $scope.add.creattime = new Date().getFullYear() + '-' + fn(new Date().getMonth()) + '-' + fn(new Date().getDate()) + ' ' + fn(new Date().getHours()) + ':' + fn(new Date().getMinutes())
-                    //console.log($scope.add.creattime)
+                    $scope.add.creattime=new Date()
                     $scope.$emit('addData', {//发送数据
                         data: $scope.add
                     })
@@ -42,6 +95,7 @@ function config($stateProvider, $urlRouterProvider) {
 }
 angular.module('myApp')
     .config(config)
+    //获取数据
     .service('data', function () {
         return [
             {
@@ -222,11 +276,10 @@ angular.module('myApp')
             }
         ]
     })
+    //分页服务
     .service("cutpage", function () {
         return function ($scope) {
-
-            var oldData= $scope.data
-            //var oldData = $scope.fileData()
+            var oldData = $scope.fileData()
             $scope.allPage = Math.ceil(oldData.length / $scope.maxLength)
             if($scope.allPage<=1){
                 $scope.showState=false
@@ -291,6 +344,7 @@ angular.module('myApp')
                 $scope.pageShow(i)
 
             }
+            //点击上页下页切换
             $scope.updownFn = function (i) {
                 if (i == "+") {
                     if (($scope.index + 1) < $scope.allPage) {
@@ -302,9 +356,9 @@ angular.module('myApp')
                     }
                 }
             }
-            $scope.valueDATA=1
+            //跳转指定页数
+           // $scope.valueDATA=1
             $scope.changeInput = function () {
-                $scope.valueDATA=$('#txt').val()
                 $scope.pageShow($scope.valueDATA)
             }
             $scope.pageShow(1)
@@ -313,85 +367,49 @@ angular.module('myApp')
     .controller("myCtrl", function ($scope, data, cutpage,$filter) {
 //数据源
         $scope.data = data
-        $scope.$on('addData',function(e,d){//接收数据
+        $scope.$on('addData',function(e,d){//接收添加用户传递过来的数据
             $scope.data.push(d.data)
             cutpage($scope)
         })
-        $scope.fileData = function () {
+        $scope.fileData = function () {//复制一遍数据源来进行操作
             return $scope.data.map(function (i) {
                 return i
             })
         }
-        $scope.maxLength = 1
-        //        定义中间页数显示的长度,只能为奇数；
-        $scope.middlePage = 5
+        $scope.maxLength = 1 //定义每页显示的数据条数
+        $scope.middlePage = 5 // 定义中间页数显示的长度,只能为奇数；
         cutpage($scope)
-
-
         //根据唯一的id值匹配删除;
-        $scope.remove = function (id) {
-            $scope.data.forEach(function(item,index){//遍历数据，若点击删除的数据行对应的Id与数据中的id值相匹配，则利用索引删除数组对应值
-                if(item.ID==id){
-                    $scope.data.splice(index,1)
-                }
-            })
-            cutpage($scope)
-        }
-        $scope.bool=true
+        //$scope.remove = function (id) {
+        //    $scope.data.forEach(function(item,index){//遍历数据，若点击删除的数据行对应的Id与数据中的id值相匹配，则利用索引删除数组对应值
+        //        if(item.ID==id){
+        //            $scope.data.splice(index,1)
+        //        }
+        //    })
+        //    cutpage($scope)
+        //}
+        //
+        //$scope.bool=true//先将点击修改的弹出框隐藏
         ////修改表格信息
-        $scope.change=function(id){
-            $scope.bool=false
-            $scope.data.forEach(function(item,index){
-                if(item.ID==id){
-                    $scope.temp={}
-                    for(s in item){
-                        $scope.temp[s]=item[s];
-                    }
-                    $scope.sure=function(){
-                        $scope.bool=true
-                        $scope.data[index]=$scope.temp;
-                        cutpage($scope)
-                    }
-                }
-            })
-        }
-
-        $scope.cancel=function(){//点击取消弹出框消失
-            $scope.bool=true
-        }
-        $scope.filts=function(){
-            //console.log(1)
-            $scope.roles=$('#roles').val()
-            $scope.states=$('#states').val()
-            console.log($scope.roles+$scope.states)
-            $scope.names=$('#names').val()
-            cutpage($scope)
-            return $filter('filter')($scope.data,{role:$scope.roles,state:$scope.states})
-        }
-
-        $scope.searchFn=function(){
-            $scope.names=$('#names').val()
-            $scope.roles=$('#roles').val()
-            console.log($scope.roles)
-            $scope.states=$('#states').val()
-
-            $scope.data=$scope.data.filter(function(v,i){
-                if(v.role.indexOf($scope.roles)!=-1){
-                    return v;
-                }
-            });
-            $scope.data=$scope.data.filter(function(v,i){
-                if(v.loginname.indexOf($scope.names)!=-1){
-                    return v;
-                }
-            });
-            $scope.data=$scope.data.filter(function(v,i){
-                if(v.state.indexOf($scope.states)!=-1){
-                    return v;
-                }
-            });
-            cutpage($scope)
-        }
+        //$scope.change=function(id){
+        //    $scope.bool=false //点击修改让弹出框显示
+        //    $scope.data.forEach(function(item,index){
+        //        if(item.ID==id){//遍历数据若源数据的ID等于点击的数据的ID
+        //            $scope.temp={}
+        //            for(s in item){//将源数据的内容赋值给这个定义的空对象
+        //                $scope.temp[s]=item[s];
+        //            }
+        //            $scope.sure=function(){//点击确定将弹出框隐藏并将对应源数据修改为定义的新对象
+        //                $scope.bool=true
+        //                $scope.data[index]=$scope.temp;
+        //                cutpage($scope)
+        //            }
+        //        }
+        //    })
+        //    $scope.cancel=function(){//点击取消弹出框消失
+        //        $scope.bool=true
+        //    }
+        //}
     })
 
 

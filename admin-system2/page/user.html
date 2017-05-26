@@ -1,0 +1,13 @@
+<div class="roleAdd">
+    <h4>用户管理</h4>
+    <hr>
+    <ul>
+        <li>ID：<input type="text" ng-model="add.ID" id="ids"></li>
+        <li>名称：<input type="text" ng-model="add.role" id="aRole"></li>
+        <li>状态：<input type="text" ng-model="add.state" id="aState"></li>
+        <li>序号：<input type="text" ng-model="add.orders" id="aOrder"></li>
+        <!--<li>创建时间: <input type="text" ng-model="add.creattime |date:'yyyy-MM-dd hh:mm'" id="acreate"></li>-->
+        <li>创建时间: <input type="text" ng-model="add.creattime" ></li>
+    </ul>
+    <button ng-click="addFn()">add</button>
+</div>

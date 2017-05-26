@@ -44,7 +44,7 @@
                 <td>{{x.telephone}}</td>
                 <td>{{x.email}}</td>
                 <td>{{x.state}}</td>
-                <td>{{x.creattime}}</td>
+                <td>{{x.creattime | date:"yyyy-MM-dd hh:mm"}}</td>
                 <td><a href=""  ng-click="change(x.ID)">修改</a> <a href="" ng-click="remove(x.ID)">删除</a></td>
             </tr>
         </tbody>
